@@ -1,0 +1,51 @@
+# macOS / Windows
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Editor temporary files
+*~
+*.swp
+*.swo
+.vscode/*.local.json
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Generated build output
+build/
+Debug/
+Release/
+dist/
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.su
+
+# STM32CubeIDE / Eclipse local workspace state
+# Keep source project configuration such as .project and .cproject tracked.
+.metadata/
+*.launch.local
+
+# KiCad temporary state and backups
+# Keep .kicad_pro, .kicad_sch, and .kicad_pcb files tracked.
+*.lck
+*.kicad_prl
+*-backups/
+*.kicad_sch-bak
+*.kicad_pcb-bak
+*.bak

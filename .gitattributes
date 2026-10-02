@@ -1,0 +1,58 @@
+# Normalize text files across macOS, Linux, and Windows.
+* text=auto
+
+# Documentation and configuration
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+
+# Firmware source
+*.c text eol=lf
+*.h text eol=lf
+*.cpp text eol=lf
+*.ld text eol=lf
+*.s text eol=lf
+*.S text eol=lf
+*.ioc text eol=lf
+
+# Scripts and build configuration
+*.sh text eol=lf
+*.py text eol=lf
+*.cmake text eol=lf
+Makefile text eol=lf
+CMakeLists.txt text eol=lf
+
+# Windows command scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# KiCad source files
+*.kicad_sch text eol=lf
+*.kicad_pcb text eol=lf
+*.kicad_pro text eol=lf
+*.kicad_sym text eol=lf
+*.kicad_mod text eol=lf
+
+# Images and documents
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+
+# Audio and archives
+*.wav binary
+*.mp3 binary
+*.zip binary
+
+# Mechanical / CAD exports
+*.step binary
+*.stp binary
+*.stl binary
+*.3mf binary
+
+# Git LFS is intentionally not configured.
+# Add it later only if large binary files create a demonstrated need.
