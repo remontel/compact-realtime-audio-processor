@@ -1,82 +1,65 @@
 # Firmware
 
-This directory contains the embedded firmware for the Compact Real-Time Audio Processor.
+The final system targets the **STM32H750IBT6**, **PCM3168A** codec, and **48 kHz** audio. Baseline effects are three-band EQ, overdrive/distortion, and digital delay.
 
-The firmware will run on the **STM32H750IBT6** and interface with the **PCM3168A** audio codec. The baseline audio sample rate is **48 kHz**.
+Prototype boards let us develop and test parts of the system before the final PCB is ready.
 
-Firmware structure will be added as implementation begins rather than creating empty directories in advance.
+## Code Organization
 
----
+Keep one buildable project per board and share reusable code between projects. Add folders when code is ready; do not create empty projects in advance.
 
-## Firmware Responsibilities
+```text
+firmware/
+├── shared/
+│   ├── dsp/          # Effects and mixing
+│   ├── app/          # Parameters and application behavior
+│   ├── ui/           # Menus and display-independent UI logic
+│   ├── drivers/      # Reusable device drivers
+│   └── interfaces/   # Small interfaces between shared code and hardware
+└── targets/
+    ├── daisy-seed/
+    ├── stm32h755-prototype/
+    ├── stm32f411-display/
+    ├── stm32h750vb-prototype/
+    └── final-h750ib/
+```
 
-The firmware is expected to handle:
+- Keep effects, parameters, and UI behavior in `shared/` when they can be reused.
+- Keep clocks, pins, DMA, startup code, linker scripts, and board initialization in the target project.
+- Have each target call shared code through a small hardware adapter. Reference shared source files using relative paths rather than copying them into each project.
+- Keep shared DSP independent of Daisy board objects, STM32 peripheral handles, and display code. Define sample format, channel layout, sample rate, buffer size, and memory ownership clearly.
 
-- MCU and peripheral initialization
-- Audio codec configuration and control
-- Real-time digital audio transport
-- DMA-based audio buffering
-- Software-controlled input mixing
-- Real-time DSP
-- Physical controls
-- Graphical display
-- External memory
-- Overall system control
+## Board Projects
 
----
+Each target must include the files needed to build it and a short README covering:
 
-## Baseline DSP
+- Exact board/revision, connected hardware, and wiring.
+- Toolchain, CubeMX/firmware package, and dependency versions, as applicable.
+- How to build, flash, and debug.
+- Tests performed, known limitations, and work still needed for the final MCU.
 
-The baseline DSP chain includes:
+Give each Cube-based target its own `.ioc` and project configuration. Keep application logic in dedicated modules or CubeMX `USER CODE` sections. Review generated changes carefully, especially clocks, DMA, audio interfaces, and pins.
 
-- Three-band EQ
-- Overdrive / distortion
-- Digital delay
+Keep IDE workspaces outside the repository. Import projects from the clone without copying them into the workspace.
 
-The final processing order, parameters, and implementation details will be defined during DSP development.
+## What to Commit
 
----
+Commit enough for a teammate to clone the repository and reproduce the documented build:
 
-## Real-Time Audio
+- Source and headers, including generated source needed to build.
+- `.ioc` files, startup code, linker scripts, and build files.
+- Required portable IDE project settings, including `.project` and `.cproject`.
+- Dependency versions, licenses, and setup instructions. Pin dependencies to a specific version or commit.
+- Project instructions and test procedures/results under `tests/`.
 
-Audio processing must remain predictable and low latency.
+Do not commit build output (`Debug/`, `Release/`, `.elf`, `.hex`, `.bin`), workspace `.metadata/`, temporary files, credentials, or personal paths/settings. Review `git status` and `git diff` before committing.
 
-Avoid blocking operations, unnecessary logging, dynamic memory allocation, and display/UI work inside time-critical audio processing.
+Use task branches and reviewed PRs as described in [CONTRIBUTING.md](../CONTRIBUTING.md). Merge useful prototype work regularly; keep board projects together on `main` after review rather than maintaining permanent branches per board or person.
 
-When implementing the audio path, consider:
+## Testing and Integration
 
-- Buffer size
-- Processing time
-- CPU usage
-- Memory usage
-- DMA synchronization
-- Added latency
+Keep audio processing bounded: avoid blocking calls, logging, dynamic allocation, and display/UI work in the audio callback. Track processing time, memory use, DMA/cache handling, and latency as the audio path develops.
 
-More detailed implementation decisions should be documented when the audio engine exists.
+Test shared code on another target early. Prototype success does not verify final-board memory, timing, codec operation, or electrical behavior. State whether work is compiled, simulated, bench tested, or still untested, and identify remaining hardware validation.
 
----
-
-## STM32CubeMX / STM32CubeIDE
-
-STM32CubeMX configuration should be treated as part of the firmware source and tracked in Git.
-
-Avoid unnecessary changes to generated code. Application logic should generally live in dedicated source files or CubeMX `USER CODE` sections so that project regeneration does not overwrite custom code.
-
-Changes to clocks, DMA, audio peripherals, GPIO assignments, or external memory interfaces should be reviewed carefully because they may affect both firmware and hardware.
-
----
-
-## Development
-
-The exact development environment and project structure will be documented once the initial STM32 project is created.
-
-At that point this README should include:
-
-- Required STM32CubeIDE / STM32CubeMX versions
-- STM32 firmware package version
-- How to open and build the project
-- How to flash and debug the MCU
-- Required development hardware
-- Any project-specific setup steps
-
-See the project [requirements](../docs/requirements.md) and [architecture](../docs/architecture.md) for system-level context.
+See [requirements](../docs/requirements.md) and [architecture](../docs/architecture.md) for the current baseline. Record significant firmware architecture decisions in [docs/decisions/](../docs/decisions/).
