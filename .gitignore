@@ -49,3 +49,8 @@ dist/
 *.kicad_sch-bak
 *.kicad_pcb-bak
 *.bak
+
+# Local folder selection and inactive macOS IntelliSense settings
+/.vscode/settings.json
+/firmware/.vscode/settings.json
+/firmware/targets/stm32f411-display/.vscode/c_cpp_properties.json
