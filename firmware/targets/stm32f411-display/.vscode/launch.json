@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "F411: Debug at main (ST-LINK)",
+            "type": "stlinkgdbtarget",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+            "deviceName": "STM32F411CEU6",
+            "deviceCore": "Cortex-M4",
+            "runEntry": "main",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${workspaceFolder}/build/Debug/stm32f411-display.elf",
+                    "symbolFileName": "${workspaceFolder}/build/Debug/stm32f411-display.elf"
+                }
+            ],
+            "serverInterface": "SWD",
+            "serverInterfaceFrequency": "140",
+            "serverReset": "Software system reset",
+            "serverVerify": true
+        }
+    ]
+}
